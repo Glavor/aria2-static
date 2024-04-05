@@ -18,12 +18,12 @@ export RANLIB="$HOST-ranlib"
 export AR="$HOST-ar"
 export LD="$HOST-ld"
 
-source $SCRIPT_DIR/dependences
+source $SCRIPT_DIR/dependencies
 source $SCRIPT_DIR/snippet/cross-build
 source $SCRIPT_DIR/snippet/aria2-utils
 
 apt update
-apt -y install git curl ca-certificates build-essential mingw-w64 pkgconf \
+apt -y install git curl jq ca-certificates build-essential mingw-w64 pkgconf \
     libxml2-dev libcppunit-dev autoconf automake autotools-dev autopoint libtool
 
 ZLIB_BUILD

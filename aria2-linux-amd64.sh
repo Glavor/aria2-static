@@ -18,12 +18,12 @@ export RANLIB="ranlib"
 export AR="ar"
 export LD="ld"
 
-source $SCRIPT_DIR/dependences
+source $SCRIPT_DIR/dependencies
 source $SCRIPT_DIR/snippet/target-build
 source $SCRIPT_DIR/snippet/aria2-utils
 
 apt update
-apt -y install git curl ca-certificates build-essential pkgconf \
+apt -y install git curl jq ca-certificates build-essential pkgconf \
     libssl-dev libxml2-dev libcppunit-dev autoconf automake autotools-dev autopoint libtool
 
 ZLIB_BUILD

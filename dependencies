@@ -1,0 +1,55 @@
+#!/bin/bash
+
+GET_ZLIB() {
+    ZLIB=$(curl -Ls "https://api.github.com/repos/madler/zlib/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] zlib: $ZLIB"
+}
+
+GET_EXPAT() {
+    EXPAT=$(curl -Ls "https://api.github.com/repos/libexpat/libexpat/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] libexpat: $EXPAT"
+}
+
+GET_LIBSSH2() {
+    LIBSSH2=$(curl -Ls "https://api.github.com/repos/libssh2/libssh2/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] libssh2: $LIBSSH2"
+}
+
+GET_SQLITE3() {
+    SQLITE3=https://www.sqlite.org/$(curl -Ls 'https://www.sqlite.org/download.html' | \
+        sed -nr 's/PRODUCT,[^,]+,([^,]+sqlite-autoconf-[^,]+),.+/\1/p')
+    echo "[DEPENDENCES] sqlite3: $SQLITE3"
+}
+
+GET_C_ARES() {
+    C_ARES=$(curl -Ls "https://api.github.com/repos/c-ares/c-ares/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] c-ares: $C_ARES"
+}
+
+GET_LIBGMP() {
+    LIBGMP=https://ftp.gnu.org/gnu/gmp/$(curl -Ls 'https://ftp.gnu.org/gnu/gmp/' | \
+        sed -nr 's/.*href="(gmp-[0-9.]+tar.xz)">.*/\1/p' | tail -1)
+    echo "[DEPENDENCES] libgmp: $LIBGMP"
+}
+
+GET_OPENSSL() {
+    OPENSSL=$(curl -Ls "https://api.github.com/repos/openssl/openssl/releases" | \
+        jq -r 'first(.[] | select(.tag_name | startswith("OpenSSL_1_"))).assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] openssl: $OPENSSL"
+}
+
+GET_OPENSSLV3() {
+    OPENSSL=$(curl -Ls "https://api.github.com/repos/openssl/openssl/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] openssl: $OPENSSL"
+}
+
+GET_LIBRESSL() {
+    LIBRESSL=$(curl -Ls "https://api.github.com/repos/libressl/portable/releases/latest" | \
+        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    echo "[DEPENDENCES] libressl: $LIBRESSL"
+}

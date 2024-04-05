@@ -1,18 +1,19 @@
 #!/bin/bash
 
 ZLIB_BUILD() {
+    GET_ZLIB
     mkdir -p $BUILD_DIR/zlib && cd $BUILD_DIR/zlib
-    curl -Ls -o - "$ZLIB" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$ZLIB" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --static
-    make -j$(nproc)
-    make install
+    make -j$(nproc) install
 }
 
 EXPAT_BUILD() {
+    GET_EXPAT
     mkdir -p $BUILD_DIR/expat && cd $BUILD_DIR/expat
-    curl -Ls -o - "$EXPAT" | tar jxvf - --strip-components=1
+    curl -Ls -o - "$EXPAT" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --enable-static \
@@ -20,80 +21,66 @@ EXPAT_BUILD() {
         --without-examples \
         --without-tests \
         --without-docbook
-    make -j$(nproc)
-    make install
+    make -j$(nproc) install
 }
 
 C_ARES_BUILD() {
+    GET_C_ARES
     mkdir -p $BUILD_DIR/c-ares && cd $BUILD_DIR/c-ares
-    curl -Ls -o - "$C_ARES" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$C_ARES" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --enable-static \
         --disable-shared \
         --disable-tests
-    make -j$(nproc)
-    make install
+    make -j$(nproc) install
 }
 
 OPENSSL_BUILD() {
+    GET_OPENSSL
     mkdir -p $BUILD_DIR/openssl && cd $BUILD_DIR/openssl
-    curl -Ls -o - "$OPENSSL" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$OPENSSL" | tar zxf - --strip-components=1
     ./Configure \
         -static \
         --prefix=$PREFIX \
         $OPENSSL_ARCH \
         --openssldir=/etc/ssl
-    make -j$(nproc)
-    make install_sw
+    make -j$(nproc) install_sw
 }
 
 LIBRESSL_BUILD() {
+    GET_LIBRESSL
     mkdir -p $BUILD_DIR/libressl && cd $BUILD_DIR/libressl
-    curl -Ls -o - "$LIBRESSL" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$LIBRESSL" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --enable-static \
         --disable-shared
-    make -j$(nproc)
-    make install_sw
+    make -j$(nproc) install_sw
 }
 
 SQLITE3_BUILD() {
+    GET_SQLITE3
     mkdir -p $BUILD_DIR/sqlite3 && cd $BUILD_DIR/sqlite3
-    curl -Ls -o - "$SQLITE3" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$SQLITE3" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --enable-static \
         --disable-shared \
         --disable-dynamic-extensions
-    make -j$(nproc)
-    make install
+    make -j$(nproc) install
 }
 
 LIBSSH2_BUILD() {
+    GET_LIBSSH2
     mkdir -p $BUILD_DIR/libssh2 && cd $BUILD_DIR/libssh2
-    curl -Ls -o - "$LIBSSH2" | tar zxvf - --strip-components=1
+    curl -Ls -o - "$LIBSSH2" | tar zxf - --strip-components=1
     ./configure \
         --prefix=$PREFIX \
         --enable-static \
         --disable-shared \
         --disable-examples-build
-    make -j$(nproc)
-    make install
-}
-
-JEMALLOC_BUILD() {
-    mkdir -p $BUILD_DIR/jemalloc && cd $BUILD_DIR/jemalloc
-    curl -Ls -o - "$JEMALLOC" | tar jxvf - --strip-components=1
-    ./configure \
-        --prefix=$PREFIX \
-        --enable-static \
-        --disable-shared \
-        --disable-stats \
-        --enable-prof
-    make -j$(nproc)
-    make install
+    make -j$(nproc) install
 }
 
 ARIA2_BUILD() {

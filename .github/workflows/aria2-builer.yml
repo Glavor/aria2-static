@@ -1,0 +1,71 @@
+name: Aria2 Builder
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+  push:
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        PLATFORMS: [linux-amd64, linux-arm64, windows-amd64]
+        include:
+          - PLATFORMS: linux-amd64
+            BUILDER_IMAGE: debian:stable
+            BUILD_SCRIPT: aria2-linux-amd64.sh
+          - PLATFORMS: linux-arm64
+            BUILDER_IMAGE: debian:stable
+            BUILD_SCRIPT: aria2-linux-arm64.sh
+          - PLATFORMS: windows-amd64
+            BUILDER_IMAGE: debian:stable
+            BUILD_SCRIPT: aria2-windows-amd64.sh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build aria2
+        env:
+          DOCKER_BUILDKIT: 1
+          BUILDER_IMAGE: ${{ matrix.BUILDER_IMAGE }}
+          BUILD_SCRIPT: ${{ matrix.BUILD_SCRIPT }}
+        run: |
+          docker build \
+            --build-arg BUILDER_IMAGE \
+            --build-arg BUILD_SCRIPT \
+            --platform=local \
+            --output type=local,dest=output .
+
+      - name: Set up QEMU
+        if: matrix.PLATFORMS == 'linux-arm64'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Install wine
+        if: matrix.PLATFORMS == 'windows-amd64'
+        run: sudo apt update && sudo apt install -y wine
+
+      - name: Check build
+        run: |
+          if [ -f output/aria2c.exe ]; then
+              file output/aria2c.exe | tee output/file-type-${{ matrix.PLATFORMS }}.txt
+              wine output/aria2c.exe -v 2>/dev/null | tee output/version-${{ matrix.PLATFORMS }}.txt
+          else
+              file output/aria2c | tee output/file-type-${{ matrix.PLATFORMS }}.txt
+              output/aria2c -v 2>&1 | tee output/version-${{ matrix.PLATFORMS }}.txt
+              output/aria2c "https://raw.githubusercontent.com/aria2/aria2/master/NEWS"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aria2-${{ matrix.PLATFORMS }}
+          path: output

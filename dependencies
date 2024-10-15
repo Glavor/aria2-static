@@ -49,7 +49,6 @@ GET_OPENSSLV3() {
 }
 
 GET_LIBRESSL() {
-    LIBRESSL=$(curl -Ls "https://api.github.com/repos/libressl/portable/releases/latest" | \
-        jq -r '.assets[] | select(.name | endswith(".tar.gz")).browser_download_url')
+    LIBRESSL=$(curl -Ls "https://www.libressl.org/index.html" | grep -o -E "https://ftp.openbsd.org/.*txt" | sed 's/-relnotes.txt/.tar.gz/')
     echo "[DEPENDENCES] libressl: $LIBRESSL"
 }

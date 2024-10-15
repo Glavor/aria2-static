@@ -79,6 +79,7 @@ jobs:
           path: output
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: aria2-*.tar.gz
+          tag_name: aria2_auto_build
+          files: aria2-${{ matrix.PLATFORMS }}.tar.gz

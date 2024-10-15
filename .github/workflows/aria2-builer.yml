@@ -64,8 +64,21 @@ jobs:
               output/aria2c "https://raw.githubusercontent.com/aria2/aria2/master/NEWS"
           fi
 
+      - name: Package aria2c
+        run: |
+          if [ -f output/aria2c.exe ]; then
+              tar -czvf aria2-${{ matrix.PLATFORMS }}.tar.gz -C output aria2c.exe
+          else
+              tar -czvf aria2-${{ matrix.PLATFORMS }}.tar.gz -C output aria2c
+          fi
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: aria2-${{ matrix.PLATFORMS }}
           path: output
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: aria2-*.tar.gz
